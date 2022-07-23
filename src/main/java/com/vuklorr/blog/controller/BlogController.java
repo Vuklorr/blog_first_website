@@ -5,10 +5,7 @@ import com.vuklorr.blog.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -44,10 +41,38 @@ public class BlogController {
 
     @GetMapping("/blog/{id}")
     public String blogDetails(@PathVariable(name = "id") int id, Model model) {
-        Optional<Post> post =  postRepository.findById(id);
+        if(!postRepository.existsById(id)) {
+            return "redirect:/blog";
+        }
+        Optional<Post> post =  postRepository.findById(id);//find by int
         ArrayList<Post> res = new ArrayList<>();
         post.ifPresent(res::add);
         model.addAttribute("post", res);
         return "blog-details";
+    }
+
+    @GetMapping("/blog/{id}/edit")
+    public String blogEdit(@PathVariable(value = "id") int id, Model model) {
+        Optional<Post> post = postRepository.findById(id);
+        ArrayList<Post> res = new ArrayList<>();
+        post.ifPresent(res::add);
+        model.addAttribute("post",res);
+        return "blog-edit";
+    }
+
+    @PostMapping("/blog/{id}/edit")
+    public String blogUpdate(@PathVariable(value = "id") int id, @RequestParam String title, @RequestParam String full_text) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.setTitle(title);
+        post.setFull_text(full_text);
+        postRepository.save(post);
+        return "redirect:/blog";
+    }
+
+    @PostMapping("/blog/{id}/delete")
+    public String blogDelete(@PathVariable(value = "id") int id, Model model) {
+        Post post = postRepository.findById(id).orElseThrow();
+        postRepository.delete(post);
+        return "redirect:/blog";
     }
 }
