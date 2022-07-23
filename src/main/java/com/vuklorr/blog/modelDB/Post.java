@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private int id;
     private String title;
     private String full_text;
     private int views;
@@ -23,11 +23,11 @@ public class Post {
         this.title = title;
         this.full_text = full_text;
     }
-    public UUID getId() { //@Data
+    public int getId() { //@Data
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int  id) {
         this.id = id;
     }
 

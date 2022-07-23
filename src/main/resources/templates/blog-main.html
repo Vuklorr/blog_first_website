@@ -11,8 +11,8 @@
     <h1>Blog website</h1>
     <div th:each="element : ${posts}" class="alert alert-info mt-2">
         <h3 th:text="${element.title}"/>
-        <p th:text="${element.views}"/>
-        <a th:href="'/blog' + ${element.id}">More</a>
+        <p th:text="${element.views} + ' views'"/>
+        <a th:href="'/blog/' + ${element.id}" class="btn btn-warning">More</a>
     </div>
 </div>
 
